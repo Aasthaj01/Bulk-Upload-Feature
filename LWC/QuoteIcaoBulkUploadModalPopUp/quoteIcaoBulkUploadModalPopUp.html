@@ -1,0 +1,32 @@
+<!-- Quote Icao Bulk Upload Modal Pop Up -->
+<template>
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading" class="slds-text-heading_medium">Bulk Upload Quote ICAO</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </header>
+
+                <!-- Modal Content -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <c-boeing-bulk-uploader-for-quote-i-c-a-o
+                            record-id={recordId}
+                            onuploadstatechange={handleUploadStateChange}>
+                    </c-boeing-bulk-uploader-for-quote-i-c-a-o>
+                </div>
+
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Upload" variant="brand" onclick={handleUpload} disabled={isUploadDisabled}></lightning-button>
+                    <lightning-button class="cancel-button-style" label="Cancel" variant="neutral" onclick={closeModal}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
