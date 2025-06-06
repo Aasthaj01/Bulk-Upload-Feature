@@ -1,0 +1,19 @@
+<apex:page standardController="QuoteICAO__c" recordSetVar="QuoteICAOs" standardStylesheets="true" showHeader="false">
+    <apex:includeLightning />
+    <!-- QuoteICAO Bulk Upload Modal Popup -->
+    <div id="quoteIcaoBulkUploadModal" />
+    <script>
+        const recordId = "{!$CurrentPage.parameters.id}";
+$Lightning.use("c:AuraApplication", function() {
+            $Lightning.createComponent("c:quoteIcaoBulkUploadModalPopUp", 
+                {
+                    recordId: recordId
+                },
+                "quoteIcaoBulkUploadModal",
+                function(component) {
+                    console.log("Open Quote ICAO Bulk Uploader"); 
+                }
+            );
+        });
+    </script>
+</apex:page>
