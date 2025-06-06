@@ -1,0 +1,47 @@
+<template>
+
+    <!-- Spinner -->
+    <template if:true={showLoadingSpinner}>
+        <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+    </template>
+
+    <!-- Bulk upload option for Sales Director-->
+    <template if:true={isSalesDirector}>
+        <!-- Custom toast message -->
+        <c-boeing-c-p-q-custom-toast></c-boeing-c-p-q-custom-toast>
+
+        <!-- File Upload Input (Centered) -->
+        <div class="file-upload-container">
+            <lightning-input
+                    label=""
+                    type="file"
+                    onchange={handleFileUpload}
+                    accept={acceptedFileFormats}
+                    multiple
+                    class="fileUploaderStyle">
+            </lightning-input>
+        </div>
+
+        <!-- Uploaded Files as Boxes -->
+        <template if:true={filesData.length}>
+            <div class="uploaded-file-list">
+                <template for:each={filesData} for:item="file" for:index="index">
+                    <div key={file.fileName} class="uploaded-file-box">
+                        <span>{file.fileName}</span>
+                        <span class="delete-icon" data-index={index} onclick={removeUploadedFile}>
+                                <lightning-icon icon-name="utility:delete" size="small" alternative-text="delete" title="delete"></lightning-icon>
+                            </span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+    </template>
+    <!-- Information message if the user is not a Sales Director-->
+    <template if:false={isSalesDirector}>
+        <div class="info-banner">
+            <lightning-icon icon-name="utility:info" alternative-text="Info" size="small" class="info-icon"></lightning-icon>
+            <span class="info-message">{infoMessageSalesDirector}</span>
+        </div>
+    </template>
+</template>
