@@ -61,8 +61,19 @@ public class BoeingCPQ_BulkFileUploadHandler {
                 }
 
                 if (!quoteIcaosListToInsert.isEmpty()) {
-                    insert quoteIcaosListToInsert ;
-                    isUploadSuccess = true;
+                    Database.SaveResult[] saveResults = Database.insert(quoteIcaosListToInsert, false);
+                    Boolean allSuccess = true;
+
+                    for (Database.SaveResult result : saveResults) {
+                        if (!result.isSuccess()) {
+                            allSuccess = false;
+                            break;
+                        }
+                    }
+
+                    if (allSuccess) {
+                        isUploadSuccess = true;
+                    }
                 }
 
 
@@ -101,38 +112,17 @@ public class BoeingCPQ_BulkFileUploadHandler {
     }
 
     private static void sendUnmatchedEmail(List<String> unmatchedCodes) {
+        //String recipient = ActionUtility.getUserEmailAddress();
         String recipient = getSalesDirectorEmail();
         if (String.isBlank(recipient)) {
-            System.debug('No sales director email found. Email not sent.');
             return;
         }
 
-        String mailBody = 'The following ICAO codes were not matched to any Global ICAO records:\n\n';
+        String mailBody = MAIL_BODY;
         for (String code : unmatchedCodes) {
             mailBody += '- ' + code + '\n';
         }
 
-        Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setToAddresses(new String[] { recipient });
-        email.setSubject(Constants.QUOTE_ICAO_MAIL_SUBJECT);
-        email.setPlainTextBody(mailBody);
-
-        try{
-            Messaging.SendEmailResult[] results = Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email }, false);
-
-            if (results != null && results.size() > 0) {
-                if (results[0].isSuccess()) {
-                    System.debug('Email sent successfully to: ' + recipient);
-                } else {
-                    for (Messaging.SendEmailError error : results[0].getErrors()) {
-                        System.debug('Email sending failed: ' + error.getMessage());
-                    }
-                }
-            }
-
-
-        }catch (Exception e){
-            System.debug('exception found while sending mail'+ e.getMessage());
-        }
+        ActionUtility.sendEmail(recipient, Constants.QUOTE_ICAO_MAIL_SUBJECT, mailBody);
     }
 }
